@@ -1,6 +1,8 @@
 // DOM Variables
 var searchInput = $("#searchInput");
 var localStats = $("#localWeatherStats");
+var futureForecast = $("#futureForecast");
+var recentlyViewed = $("#recentlyViewed");
 
 // Global Variables
 
@@ -57,12 +59,21 @@ $(document).ready(function () {
         var options = { month: "numeric", day: "numeric", year: "numeric" };
         var readableDate = unixDate.toLocaleString("en-US", options);
 
-        //Displaying current weather on the page.
+        // *** Current Weather ***
+        localStats.empty();
+
+        // Weather Icon
+        var iconCode = results.weather[0].icon;
+        var iconURL = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+        var weatherImage = $("<img>");
+        weatherImage.attr("src", iconURL);
+        console.log(weatherImage);
 
         //City Name
-        var headingStats = $("<h2>").text(
-          cityName + " " + "(" + readableDate + ")"
-        );
+        var headingStats = $("<h2>")
+          .text(cityName + " " + "(" + readableDate + ")")
+          .append(weatherImage);
+
         localStats.append(headingStats);
 
         //Temperature
@@ -73,7 +84,7 @@ $(document).ready(function () {
 
         //Humidity
         var currentHumidity = $("<p>").text(
-          "Humidity: " + results.main.humidity
+          "Humidity: " + results.main.humidity + "%"
         );
         localStats.append(currentHumidity);
 
@@ -89,7 +100,6 @@ $(document).ready(function () {
 
         //Forcing the currentUV and numUV elements to be on the same line.
         currentUV.attr("style", "display:inline-block");
-        console.log(indexUV);
         var numUV = $("<span>").text(indexUV);
 
         //Changing the background of the span to be a certain color if the UV is in certain ranges.
@@ -102,6 +112,72 @@ $(document).ready(function () {
         }
         localStats.append(currentUV);
         localStats.append(numUV);
+
+        // *** Future Forecast section ***
+
+        // Iterating over future forecast array
+        for (let i = 1; i < oneCallResult.daily.length - 2; i++) {
+          // Making the card.
+          var cardDiv = $("<div>");
+          cardDiv.attr("class", "card col-md-2 bg-custom");
+          futureForecast.append(cardDiv);
+
+          // Making the card body.
+          var cardBody = $("<div>");
+          cardBody.attr("class", "card-body");
+          cardDiv.append(cardBody);
+
+          // Making the date.
+          unixTimeStamp = oneCallResult.daily[i].dt * 1000;
+          unixDate = new Date(unixTimeStamp);
+          readableDate = unixDate.toLocaleString("en-US", options);
+          var cardHeading = $("<h3>").text(readableDate);
+          cardDiv.append(cardHeading);
+
+          // Making the icon.
+          var futureIcon = $("<img>");
+          var iconCode = oneCallResult.daily[i].weather[0].icon;
+          var iconURL =
+            "https://openweathermap.org/img/wn/" + iconCode + "@2x.png";
+          futureIcon.attr("src", iconURL);
+          cardDiv.append(futureIcon);
+
+          // Acquiring Temperature
+          var futureTemp = $("<p>").text(
+            "Temperature: " + oneCallResult.daily[i].temp.day + " °F"
+          );
+          cardDiv.append(futureTemp);
+
+          // Acquiring Humidity
+          var futureHumidity = $("<p>").text(
+            "Humidity: " + oneCallResult.daily[i].humidity + "%"
+          );
+          cardDiv.append(futureHumidity);
+        }
+
+        // store local data here "city" + atl
+        var recentCities = localStorage.getItem("recentCities");
+        if (recentCities === null) {
+          recentCities = [];
+        } else {
+          recentCities = JSON.parse(recentCities);
+        }
+
+        recentCities.unshift(cityName);
+        recentCities = [...new Set(recentCities)];
+
+        // Making recent searched cities list.
+        for (let i = 0; i < recentCities.length; i++) {
+          var recentDiv = $("<div>");
+          recentDiv.attr("class", "col-sm-12 city");
+          recentlyViewed.append(recentDiv);
+
+          var recentP = $("<p>").text(recentCities[i]);
+          recentP.attr("class", "my-auto");
+          recentlyViewed.append(recentP);
+        }
+
+        localStorage.setItem("recentCities", JSON.stringify(recentCities));
       });
     });
   }

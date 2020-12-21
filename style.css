@@ -5,6 +5,7 @@
 .citybutton {
   padding-left: 0px;
   padding-bottom: 15px;
+  /* border: solid 1px #59a8fe; */
 }
 .cityinput {
   padding-left: 2 px;
@@ -20,7 +21,7 @@
 }
 .city {
   padding-left: 10px;
-  border: ridge 1px gray;
+  border: ridge 1px #ebebeb;
   display: flex;
   align-items: center;
   padding-top: 5px;
@@ -29,3 +30,13 @@
 /* <div class="col-sm-12 city my">
 <p class="my-auto">Atlanta</p>
 </div> */
+
+.bg-custom {
+  background-color: #007bff;
+  color: white;
+}
+
+.card-body {
+  margin-top: 0px;
+  padding-top: 0px;
+}
