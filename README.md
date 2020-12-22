@@ -12,21 +12,27 @@
 
 #### **Installation**
 ---
+To make this project you need to do the following:
 
-
+1. Position the containers so that all elements will be shown, preferably by hardcoding what you are installing before you dynamically generate.
+1. Make ajax calls to openweather for current weather and for one weather call.
+1. Using DOM update the containers to show the weather of the selected city.
+1. Store the city selected into local data and restore the data when the section is selected.
 
 #### **Trials**
 ---
-
+This assignment helped me understand AJAX calls, and helped reinforce my usage of DOM.  In addition I learned about unix time stamps and how to use set to clear duplicate items in an array.
 
 
 #### **Usage**
 ---
-
+Type a city name in the search input and hit submit and the sections will be populated.  After you search the recent viewed city will be populated with the city you just looked at, and if you wish to review the info you can just click the city again.
+Website is deployed [here](https://jerler1.github.io/WeatherSearch/).
+![pic of dashboard](./weather.png)
 
 #### **Credits**
 ---
-
+Thanks to my class-mate Bradley for his help with getting my main function to work with the local storage values.
 
 #### **License**
 ---
