@@ -29,16 +29,16 @@
         <h1 class="mx-auto my-auto">Weather Dashboard</p>
       </div>
     </nav>
-    <main class="container-fluid bg-warning d-flex flex-growth-1">
+    <main class="container-fluid bg-white d-flex flex-growth-1">
         <div class="row bg-info col-12">
             <!-- // container holding the search box and local storage fast search box -->
-            <div class="col-12 col-md-4 bg-danger">
+            <div class="col-12 col-md-4 bg-customgray pb-3">
                 <h3>Search for a City:</h3>
-                <form class="bg-danger form-group row">
+                <form class="bg-customgray form-group row">
                     <div class="div col-7 cityinput">
                         <input class="form-control" id="searchInput" type="text">
                     </div>
-                    <div class="col-3 citybutton">
+                    <div class="col-3 citybutton h-100">
                         <button type="submit" id="searchButton" class="btn btn-primary fas fa-search"></button>
                     </div>
 
@@ -48,13 +48,12 @@
                 </section>
             </div>
             <!-- container holding the current and future weather -->
-            <div class="col-12 col-md-8 bg-sucess">
-                <section id="localWeatherStats">
+            <div class="col-12 col-md-8 bg-white">
+                <section id="localWeatherStats" class="py-1 my-1">
                 </section>
-                <section>
-                    <h3>5-Day Forecast:</h3>
+                <section class="bg-customgray" id="futureHeading">
                 </section>
-                <section class="row" id="futureForecast">
+                <section class="row bg-white" id="futureForecast">
                 </section>
             </div>
         </div>

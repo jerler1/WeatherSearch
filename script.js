@@ -7,30 +7,36 @@ var recentlyViewed = $("#recentlyViewed");
 // Global Variables
 
 $(document).ready(function () {
-  function accessWeather(event) {
-    event.preventDefault();
+  // Getting data in local storage
+  var recentCities = localStorage.getItem("recentCities");
+  if (recentCities === null) {
+    recentCities = [];
+  } else {
+    recentCities = JSON.parse(recentCities);
+  }
 
-    // Getting data in local storage
-    var recentCities = localStorage.getItem("recentCities");
-    if (recentCities === null) {
-      recentCities = [];
+  // Making recent searched cities list.
+  for (let i = 0; i < recentCities.length; i++) {
+    var recentDiv = $("<div>");
+    recentDiv.attr("class", "col-sm-12 city recent");
+    recentlyViewed.append(recentDiv);
+
+    var recentP = $("<p>").text(recentCities[i]);
+    recentP.attr("class", "my-auto py-2 px-3 cities");
+    recentlyViewed.append(recentP);
+  }
+
+  function accessWeather(event, pastCity) {
+    if (event !== null) {
+      event.preventDefault();
+    }
+    if (pastCity === null || pastCity === undefined) {
+      var searchingFor = searchInput.val();
     } else {
-      recentCities = JSON.parse(recentCities);
+      searchingFor = pastCity;
     }
-
-    // Making recent searched cities list.
-    for (let i = 0; i < recentCities.length; i++) {
-      var recentDiv = $("<div>");
-      recentDiv.attr("class", "col-sm-12 city recent");
-      recentlyViewed.append(recentDiv);
-
-      var recentP = $("<p>").text(recentCities[i]);
-      recentP.attr("class", "my-auto py-2 px-3");
-      recentlyViewed.append(recentP);
-    }
-
     // Making the search url..
-    var searchingFor = searchInput.val();
+
     var APIkey = "f19a9ee9dc57acf95e7f4acab7f83b60";
 
     var currentWeatherURL =
@@ -82,6 +88,7 @@ $(document).ready(function () {
 
         // *** Current Weather ***
         localStats.empty();
+        $("#localWeatherStats").attr("class", "localBorder py-2 my-2 px-2");
 
         // Weather Icon
         var iconCode = results.weather[0].icon;
@@ -135,9 +142,13 @@ $(document).ready(function () {
         localStats.append(numUV);
 
         // *** Future Forecast section ***
+        $("#futureHeading").empty();
+        var futureHeading = $("<h3>").text("5-Day Forecast:");
+        futureHeading.attr("style", "background-color: white");
+        $("#futureHeading").append(futureHeading);
 
         // Iterating over future forecast array
-
+        futureForecast.empty();
         for (let i = 1; i < oneCallResult.daily.length - 2; i++) {
           // Making the card.
           var cardDiv = $("<div>");
@@ -167,7 +178,7 @@ $(document).ready(function () {
 
           // Acquiring Temperature
           var futureTemp = $("<p>").text(
-            "Temperature: " + oneCallResult.daily[i].temp.day + " °F"
+            "Temp: " + oneCallResult.daily[i].temp.day + " °F"
           );
           cardDiv.append(futureTemp);
 
@@ -191,13 +202,14 @@ $(document).ready(function () {
         recentCities = [...new Set(recentCities)];
 
         // Making recent searched cities list.
+        recentlyViewed.empty();
         for (let i = 0; i < recentCities.length; i++) {
           var recentDiv = $("<div>");
           recentDiv.attr("class", "col-sm-12 city recent");
           recentlyViewed.append(recentDiv);
 
           var recentP = $("<p>").text(recentCities[i]);
-          recentP.attr("class", "my-auto py-2 px-3");
+          recentP.attr("class", "my-auto py-2 px-3 cities");
           recentlyViewed.append(recentP);
         }
 
@@ -207,4 +219,8 @@ $(document).ready(function () {
   }
 
   $("#searchButton").on("click", accessWeather);
+  recentlyViewed.on("click", ".cities", function (event) {
+    console.log($(this).text());
+    accessWeather(null, $(this).text());
+  });
 });
