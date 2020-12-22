@@ -9,6 +9,27 @@ var recentlyViewed = $("#recentlyViewed");
 $(document).ready(function () {
   function accessWeather(event) {
     event.preventDefault();
+
+    // Getting data in local storage
+    var recentCities = localStorage.getItem("recentCities");
+    if (recentCities === null) {
+      recentCities = [];
+    } else {
+      recentCities = JSON.parse(recentCities);
+    }
+
+    // Making recent searched cities list.
+    for (let i = 0; i < recentCities.length; i++) {
+      var recentDiv = $("<div>");
+      recentDiv.attr("class", "col-sm-12 city recent");
+      recentlyViewed.append(recentDiv);
+
+      var recentP = $("<p>").text(recentCities[i]);
+      recentP.attr("class", "my-auto py-2 px-3");
+      recentlyViewed.append(recentP);
+    }
+
+    // Making the search url..
     var searchingFor = searchInput.val();
     var APIkey = "f19a9ee9dc57acf95e7f4acab7f83b60";
 
@@ -116,10 +137,12 @@ $(document).ready(function () {
         // *** Future Forecast section ***
 
         // Iterating over future forecast array
+
         for (let i = 1; i < oneCallResult.daily.length - 2; i++) {
           // Making the card.
           var cardDiv = $("<div>");
-          cardDiv.attr("class", "card col-md-2 bg-custom");
+          cardDiv.attr("class", "card bg-custom mx-4 mb-2");
+          cardDiv.attr("style", "width: 170px");
           futureForecast.append(cardDiv);
 
           // Making the card body.
@@ -131,7 +154,7 @@ $(document).ready(function () {
           unixTimeStamp = oneCallResult.daily[i].dt * 1000;
           unixDate = new Date(unixTimeStamp);
           readableDate = unixDate.toLocaleString("en-US", options);
-          var cardHeading = $("<h3>").text(readableDate);
+          var cardHeading = $("<h4>").text(readableDate);
           cardDiv.append(cardHeading);
 
           // Making the icon.
@@ -155,7 +178,7 @@ $(document).ready(function () {
           cardDiv.append(futureHumidity);
         }
 
-        // store local data here "city" + atl
+        // Storing data in local storage
         var recentCities = localStorage.getItem("recentCities");
         if (recentCities === null) {
           recentCities = [];
@@ -163,17 +186,18 @@ $(document).ready(function () {
           recentCities = JSON.parse(recentCities);
         }
 
+        // Putting the new city in the front of the array and clearing duplicates.
         recentCities.unshift(cityName);
         recentCities = [...new Set(recentCities)];
 
         // Making recent searched cities list.
         for (let i = 0; i < recentCities.length; i++) {
           var recentDiv = $("<div>");
-          recentDiv.attr("class", "col-sm-12 city");
+          recentDiv.attr("class", "col-sm-12 city recent");
           recentlyViewed.append(recentDiv);
 
           var recentP = $("<p>").text(recentCities[i]);
-          recentP.attr("class", "my-auto");
+          recentP.attr("class", "my-auto py-2 px-3");
           recentlyViewed.append(recentP);
         }
 
